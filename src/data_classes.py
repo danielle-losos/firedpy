@@ -26,6 +26,7 @@ from bs4 import BeautifulSoup
 
 from src.enums import LandCoverType
 from src.modis_earthaccess import MODISEarthAccess, setup_modis_earthaccess
+from src.config import get_settings
 
 PROJECT_DIR = os.path.dirname(os.path.dirname(__file__))
 
@@ -185,6 +186,8 @@ class LPDAAC(Base):
         self._file_regex = None        
         # Setup EarthAccess for modern data access
         self._earthaccess = None
+        self._username = get_settings().firedpy_ed_user
+        self._password = get_settings().firedpy_ed_pwd
         if hasattr(self, '_username') and hasattr(self, '_password'):
             try:
                 self._earthaccess = setup_modis_earthaccess(self._username, self._password)
@@ -412,9 +415,6 @@ class BurnData(LPDAAC):
         try:
             # Authenticate with EarthAccess
             import earthaccess
-            # Set credentials as environment variables for earthaccess
-            os.environ['EARTHDATA_USERNAME'] = self._username
-            os.environ['EARTHDATA_PASSWORD'] = self._password
             auth = earthaccess.login()
             if not auth:
                 raise RuntimeError("EarthAccess authentication failed")

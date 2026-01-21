@@ -23,10 +23,7 @@ class MODISEarthAccess:
     def _setup_authentication(self):
         """Setup earthaccess authentication."""
         try:
-            if self.username and self.password:
-                self.auth = earthaccess.login(username=self.username, password=self.password)
-            else:
-                self.auth = earthaccess.login()
+            self.auth = earthaccess.login()
 
             if self.auth:
                 self._authenticated = True

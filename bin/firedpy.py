@@ -18,6 +18,7 @@ from src import *
 from utilities.argument_parser import FiredpyArgumentParser
 from src.spatial import shape_to_tiles
 from src.enums import EcoRegionType, TileChoice, ShapeType, LandCoverType
+from src.config import get_settings
 
 warnings.filterwarnings("ignore", category=FutureWarning)
 
@@ -77,6 +78,7 @@ def cleanup_intermediate_files(out_dir):
 
 
 def main():
+    settings = get_settings() # Singleton setting object
     initial_memory = peak_memory()
     # Start the timer (seconds)
     start = time.perf_counter()
@@ -188,8 +190,8 @@ def main():
 
     cleanup = str_to_bool(args.cleanup) if args.cleanup is not None else firedpy_parser.prompt_for_argument('cleanup')
 
-    username = os.environ.get('FIREDPY_ED_USER', None)
-    password = os.environ.get('FIREDPY_ED_PWD', None)
+    username = settings.firedpy_ed_user
+    password = settings.firedpy_ed_pwd
     if username is None or password is None:
         print("Please input your NASA Earthdata username and password in order to download the land cover data. If"
               " you do not have an Earthdata account, you can register at https://urs.earthdata.nasa.gov/. To "
@@ -281,7 +283,6 @@ def main():
 
     if cleanup:
         cleanup_intermediate_files(out_dir)
-
 
 if __name__ == "__main__":
     main()
