@@ -27,7 +27,7 @@ def computefirespeed(fire_gdf):
     prev_step = [fire_gdf.iloc[0]["geometry"].geoms[ii].simplify(0.05).exterior.coords for ii in range(len(fire_gdf.iloc[0]["geometry"].geoms))]
     ### need to deal with resampling or something here in future iteration of code
     ### iterate over time steps
-    for i in range(1, min(fire_gdf.shape[0], 10)):
+    for i in range(1, fire_gdf.shape[0]):
         ### setup for overlap and spot checks...
         inter_matrix = np.zeros((len(fire_gdf.iloc[i-1]["geometry"].geoms), len(fire_gdf.iloc[i]["geometry"].geoms)))
         for ii in range(inter_matrix.shape[0]):
@@ -53,7 +53,7 @@ def computefirespeed(fire_gdf):
 
         ### assumption here is these are daily perims...
         ### so to compute spread in km/h, we do (dist in km) / 24
-        result_speed.append((dist * 1000) / 24)
+        result_speed.append((dist / 1000) / 24)
 
     
         
