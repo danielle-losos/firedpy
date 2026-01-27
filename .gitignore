@@ -16,3 +16,13 @@
 # Miscellaneous
 /setup2.py
 /proj/
+.vscode/
+
+# Logs
+*.log
+
+# Output dirs
+/output/
+
+# MacOS
+.DS_Store
