@@ -894,6 +894,7 @@ class ModelBuilder(Base):
         gdf = gpd.GeoDataFrame(df, crs=self.crs.proj4, geometry="geometry")
 
         # Clip to study area if requested
+        shape_file = self.shape_file
         if self.country:
             shape_file = get_country_file(self.country)
         if shape_file is not None:
