@@ -221,6 +221,27 @@ def compute_max_vector(perim_inner_geoms,
                 pt_parent = np.array(outer_boundary.interpolate(outer_boundary.project(child_pts[best_idx])).coords[0])
                 max_dist = dists[best_idx]
 
+                test_line = LineString([tuple(pt_child), tuple(pt_parent)])
+                if test_line.length == 0:
+                    continue
+
+                sample_step = min(50, test_line.length)
+                n_samples = max(2, int(math.ceil((test_line.length - sample_step) / 50)) + 1)
+                sample_distances = np.linspace(sample_step, test_line.length, n_samples)
+
+                seen_outside = False
+                invalid_vector = False
+                for sample_dist in sample_distances:
+                    is_inside_parent = child_poly.covers(test_line.interpolate(sample_dist))
+                    if not is_inside_parent:
+                        seen_outside = True
+                    elif seen_outside:
+                        invalid_vector = True
+                        break
+
+                if invalid_vector:
+                    continue
+
             else:
                 # disconnected child → nearest points as usual
                 pt_child_sh, pt_parent_sh = nearest_points(child_poly, outer_poly)
